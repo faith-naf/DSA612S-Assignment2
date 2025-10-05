@@ -1,0 +1,158 @@
+version: '3.8'
+
+services:
+  # Infrastructure Services
+  mongodb:
+    image: mongo:7.0
+    container_name: mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - transport-network
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.0
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - transport-network
+
+  kafka:
+    image: confluentinc/cp-kafka:7.4.0
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    networks:
+      - transport-network
+
+  # Application Services
+  passenger-service:
+    build:
+      context: ./services/passenger-service
+    container_name: passenger-service
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mongodb
+      - kafka
+    environment:
+      MONGO_HOST: mongodb
+      MONGO_PORT: 27017
+      MONGO_USER: admin
+      MONGO_PASSWORD: password123
+      KAFKA_URL: kafka:29092
+    networks:
+      - transport-network
+
+  transport-service:
+    build:
+      context: ./services/transport-service
+    container_name: transport-service
+    ports:
+      - "8082:8082"
+    depends_on:
+      - mongodb
+      - kafka
+    environment:
+      MONGO_HOST: mongodb
+      MONGO_PORT: 27017
+      MONGO_USER: admin
+      MONGO_PASSWORD: password123
+      KAFKA_URL: kafka:29092
+    networks:
+      - transport-network
+
+  ticketing-service:
+    build:
+      context: ./services/ticketing-service
+    container_name: ticketing-service
+    ports:
+      - "8083:8083"
+    depends_on:
+      - mongodb
+      - kafka
+    environment:
+      MONGO_HOST: mongodb
+      MONGO_PORT: 27017
+      MONGO_USER: admin
+      MONGO_PASSWORD: password123
+      KAFKA_URL: kafka:29092
+    networks:
+      - transport-network
+
+  payment-service:
+    build:
+      context: ./services/payment-service
+    container_name: payment-service
+    ports:
+      - "8084:8084"
+    depends_on:
+      - mongodb
+      - kafka
+    environment:
+      MONGO_HOST: mongodb
+      MONGO_PORT: 27017
+      MONGO_USER: admin
+      MONGO_PASSWORD: password123
+      KAFKA_URL: kafka:29092
+    networks:
+      - transport-network
+
+  notification-service:
+    build:
+      context: ./services/notification-service
+    container_name: notification-service
+    ports:
+      - "8085:8085"
+    depends_on:
+      - kafka
+    environment:
+      KAFKA_URL: kafka:29092
+    networks:
+      - transport-network
+
+  admin-service:
+    build:
+      context: ./services/admin-service
+    container_name: admin-service
+    ports:
+      - "8086:8086"
+    depends_on:
+      - mongodb
+      - kafka
+    environment:
+      MONGO_HOST: mongodb
+      MONGO_PORT: 27017
+      MONGO_USER: admin
+      MONGO_PASSWORD: password123
+      KAFKA_URL: kafka:29092
+    networks:
+      - transport-network
+
+volumes:
+  mongodb_data:
+
+networks:
+  transport-network:
+    driver: bridge

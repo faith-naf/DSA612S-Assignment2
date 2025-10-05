@@ -1,0 +1,18 @@
+[package]
+org = "transport_system"
+name = "passenger_service"
+version = "0.1.0"
+
+[build-options]
+observabilityIncluded = true
+
+[[dependency]]
+org = "ballerinax"
+name = "mongodb"
+version = "5.1.0"
+
+
+[[dependency]]
+org = "ballerinax"
+name = "kafka"
+version = "3.7.0"
