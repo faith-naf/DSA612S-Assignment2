@@ -74,4 +74,5 @@ db.trips.insertOne({
 });
 
 print('✅ Sample trips inserted!');
+
 print('🎉 Database initialization completed successfully!');
