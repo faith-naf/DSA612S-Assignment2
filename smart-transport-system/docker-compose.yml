@@ -4,7 +4,7 @@ services:
   # Infrastructure Services
   mongodb:
     image: mongo:7.0
-    container_name: mongodb
+    container_name: mongod
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: password123
@@ -155,4 +155,5 @@ volumes:
 
 networks:
   transport-network:
+
     driver: bridge
