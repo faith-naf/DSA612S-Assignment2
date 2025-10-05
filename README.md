@@ -15,6 +15,7 @@
 
 ## System Components
 The system is divided into six microservices:
+
     - **Passenger Service:** Register/login, manage accounts and view tickets.
     - **Transport Service:** Create and manage routes/trips and publish schedule updates.
     - **Ticketing Service:** Handle ticket requests and lifecycle.
