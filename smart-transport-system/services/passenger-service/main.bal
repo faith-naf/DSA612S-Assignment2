@@ -167,4 +167,6 @@ service /passenger on new http:Listener(8081) {
 
 function getCurrentTimestamp() returns string|error {
     return "2025-10-03T10:00:00Z";
+
 }
+
