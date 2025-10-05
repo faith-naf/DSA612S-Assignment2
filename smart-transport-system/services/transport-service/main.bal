@@ -18,6 +18,7 @@ final mongodb:Client mongoDb = check new ({
     }
 });
 
+
 service /transport on new http:Listener(8082) {
     
     resource function get health() returns json {
@@ -27,6 +28,7 @@ service /transport on new http:Listener(8082) {
             port: 8082
         };
     }
+
     
     // Get all routes
     resource function get routes() returns json|error {
@@ -48,6 +50,7 @@ service /transport on new http:Listener(8082) {
             routes: routes
         };
     }
+
     
     // Create new route
     resource function post routes(@http:Payload json payload) returns json|error {
@@ -62,6 +65,7 @@ service /transport on new http:Listener(8082) {
             "stops": check payload.stops,
             "active": true
         };
+
         
         mongodb:Database db = check mongoDb->getDatabase("transport_system");
         mongodb:Collection routeCollection = check db->getCollection("routes");
@@ -74,6 +78,7 @@ service /transport on new http:Listener(8082) {
             message: "Route created successfully"
         };
     }
+
     
     // Get trips for a route
     resource function get trips/[string routeId]() returns json|error {
@@ -90,6 +95,7 @@ service /transport on new http:Listener(8082) {
             do {
                 trips.push(trip);
             };
+
         
         return {
             route_id: routeId,
@@ -97,6 +103,7 @@ service /transport on new http:Listener(8082) {
             trips: trips
         };
     }
+
     
     // Create new trip
     resource function post trips(@http:Payload json payload) returns json|error {
@@ -112,6 +119,7 @@ service /transport on new http:Listener(8082) {
             "status": "scheduled",
             "vehicle_info": check payload.vehicle_info
         };
+
         
         mongodb:Database db = check mongoDb->getDatabase("transport_system");
         mongodb:Collection tripCollection = check db->getCollection("trips");
@@ -125,4 +133,5 @@ service /transport on new http:Listener(8082) {
         };
     }
 }
+
 
