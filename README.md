@@ -19,7 +19,7 @@ The system is divided into six microservices:
     - Passenger Service: Register/login, manage accounts and view tickets.
     - Transport Service: Create and manage routes/trips and publish schedule updates.
     - Ticketing Service: Handle ticket requests and lifecycle.
-    - Payment Service: Simulate payments, confirm transactions via Kafka events.
+    - Payment Service: Simulate payments and confirm transactions via Kafka events.
     - Notification Service: Send updates when trips change or tickets are validated.
     - Admin Service: Manage routes, trips, ticket sales reports and publish service disruptions or schedule changes.
 
