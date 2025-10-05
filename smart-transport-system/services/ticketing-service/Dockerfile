@@ -13,6 +13,6 @@ RUN bal build --offline
 EXPOSE 8083
 
 # Run the service
-
 CMD bal run --offline
+
 
