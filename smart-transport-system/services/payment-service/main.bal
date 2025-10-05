@@ -10,7 +10,7 @@ service /payment on new http:Listener(8084) {
             services: "Payment Service",
             port: 8084
         };
-    }
+    } 
     
     resource function post process(@http:Payload json paymentRequest) returns json|error {
         log:printInfo("Processing payment");
@@ -35,4 +35,5 @@ service /payment on new http:Listener(8084) {
             amount: 100.00
         };
     }
+
 }
